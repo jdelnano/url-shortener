@@ -1,5 +1,5 @@
 locals {
-  domain_name      = "joedelnano.com"
+  domain_name      = "<domain_name>"
   api_gateway_name = "UrlShortener"
 }
 
@@ -44,6 +44,19 @@ resource "aws_acm_certificate_validation" "domain" {
   validation_record_fqdns = [for record in aws_route53_record.domain : record.fqdn]
 }
 
+# A record is necessary to route traffic from Route53 to API Gateway
+resource "aws_route53_record" "alias" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = local.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_api_gateway_domain_name.api.cloudfront_domain_name
+    zone_id                = aws_api_gateway_domain_name.api.cloudfront_zone_id
+    evaluate_target_health = false
+  }
+}
+
 ###########################################
 ###########################################
 # API Gateway, Lambda, and IAM  Resources #
@@ -52,7 +65,7 @@ resource "aws_acm_certificate_validation" "domain" {
 #
 # API Gateway
 resource "aws_api_gateway_domain_name" "api" {
-  domain_name     = local.domain
+  domain_name     = local.domain_name
   certificate_arn = aws_acm_certificate_validation.domain.certificate_arn
 
   endpoint_configuration {
@@ -62,6 +75,38 @@ resource "aws_api_gateway_domain_name" "api" {
 
 resource "aws_api_gateway_rest_api" "api" {
   name = local.api_gateway_name
+}
+
+resource "aws_api_gateway_deployment" "api" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.redirect.id,
+      aws_api_gateway_method.redirect.id,
+      aws_api_gateway_integration.redirect.id,
+
+      aws_api_gateway_resource.shorten.id,
+      aws_api_gateway_method.shorten.id,
+      aws_api_gateway_integration.shorten.id,
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "api" {
+  deployment_id = aws_api_gateway_deployment.api.id
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  stage_name    = "prod"
+}
+
+resource "aws_api_gateway_base_path_mapping" "api" {
+  api_id      = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.api.stage_name
+  domain_name = aws_api_gateway_domain_name.api.domain_name
 }
 
 // ****************************
@@ -128,8 +173,7 @@ resource "aws_lambda_permission" "shorten" {
   function_name = aws_lambda_function.shorten.function_name
   principal     = "apigateway.amazonaws.com"
 
-  # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.shorten.http_method}${aws_api_gateway_resource.shorten.path}"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.shorten.http_method}${aws_api_gateway_resource.shorten.path}"
 }
 // **************************
 // * END "/shorten" => POST *
@@ -169,8 +213,7 @@ resource "aws_lambda_permission" "redirect" {
   function_name = aws_lambda_function.redirect.function_name
   principal     = "apigateway.amazonaws.com"
 
-  # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.redirect.http_method}${aws_api_gateway_resource.redirect.path}"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.redirect.http_method}${aws_api_gateway_resource.redirect.path}"
 }
 // ************************
 // * END "/{id}" => GET *
@@ -210,7 +253,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "role" {
-  name               = "myrole"
+  name               = "url_shortener_lambda"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -233,7 +276,7 @@ data "aws_iam_policy_document" "dynamodb_rw" {
 }
 
 resource "aws_iam_policy" "dynamodb_rw" {
-  name        = "dynamodb_rw"
+  name        = "dynamodb_read_write"
   description = "A policy to allow lambda to read-write from/to DynamoDB"
   policy      = data.aws_iam_policy_document.dynamodb_rw.json
 }
@@ -249,7 +292,7 @@ resource "aws_iam_role_policy_attachment" "dynamodb_rw_att" {
 #####################
 #####################
 resource "aws_dynamodb_table" "url_table" {
-  name         = "UrlShortenerTest"
+  name         = "UrlShortenerTable"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
 
