@@ -1,16 +1,16 @@
 # URL shorterner
-## Built using AWS API Gateway, Lambda functions (2), and DynamoDB
+## Built using AWS API Gateway, (two) Lambda functions, and DynamoDB
 
 ### Prerequisite
 * An AWS Account
 * A domain name that will function as your "short url" domain. Preferably this domain is one purchased in Route53. 
   * **Note**:  You will need to have the domain purchased before executing any steps to set the url shortener up.
 * You will need the following software installed on your machine/in your local environment:
-  * [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) - Note:  if you are a Mac user,
-    I recommend using [tfenv](https://github.com/tfutils/tfenv) to install and manage terraform versions.
+  * [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+    * **Note**:  if you are a Mac user, I recommend using [tfenv](https://github.com/tfutils/tfenv) to install and manage terraform versions.
   * [Golang](https://go.dev/doc/install)
 * Ensure your AWS credentials (with sufficient permissions) are [configured locally](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)--recommended
-in $HOME/.aws/credentials--so that terraform will be able to successfully create IAM, API Gateway, DynamoDB, and Lambda resources.
+in `$HOME/.aws/credentials`--so that terraform will be able to successfully create IAM, API Gateway, DynamoDB, and Lambda resources.
 
 ### Installation
 1. Clone this repo and then `cd` inside the project root:
