@@ -1,5 +1,5 @@
 locals {
-  domain_name      = "<domain_name>"
+  domain_name      = "<your_domain_name.com>"
   api_gateway_name = "UrlShortener"
 }
 

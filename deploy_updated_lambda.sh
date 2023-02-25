@@ -17,7 +17,10 @@ if ! [[ -d "${topleveldir}/${1}" ]]; then
     GOOS=linux go build -o main main.go
     zip -jrm main.zip main
     popd
-    read -p "Press enter to perform a `terraform apply` and update your '${1}' lambda function."
+
+    read -p "Press ENTER to perform a 'terraform apply' and update your '${1}' lambda function." -n 1 -r
+    echo
+
     # run a terraform apply to update the lambda function updated
     terraform apply
 else
