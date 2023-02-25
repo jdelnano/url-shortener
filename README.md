@@ -1,7 +1,7 @@
 # URL shorterner
 ## Built using AWS API Gateway, (two) Lambda functions, and DynamoDB
 
-### Prerequisite
+### Prerequisites
 * An AWS Account
 * A domain name that will function as your "short url" domain. Preferably this domain is one purchased in Route53. 
   * **Note**:  You will need to have the domain purchased before executing any steps to set the url shortener up.
@@ -29,6 +29,15 @@ terraform apply
 ```
 3. That _should_ be it! If for some reason your API seems to not be active, you may need to go into
 API Gateway and perform a 'deploy' of you API:
+
+### Deploying lambda function updates
+If you find that you want to make updates to either `./lambdas/shorten/main.go` or `./lambdas/redirect/main.go`
+you'll need to then execute (from the repository directory):
+```bash
+./deploy_updated_lambda.sh shorten
+./deploy_updated_lambda.sh redirect
+```
+The helper script will build a new binary, compress it, and if you press ENTER, will perform a `terraform apply`.
 
 ### Usage
 
