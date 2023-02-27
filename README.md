@@ -31,13 +31,12 @@ terraform apply
 API Gateway and perform a 'deploy' of you API:
 
 ### Deploying lambda function updates
-If you find that you want to make updates to either `./lambdas/shorten/main.go` or `./lambdas/redirect/main.go`
-you'll need to then execute (from the repository directory):
+If you find that you want to make updates to either `./lambdas/shorten/main.go` and/or `./lambdas/redirect/main.go`
+you'll need to then execute (ideally from the repository directory):
 ```bash
-./deploy_updated_lambda.sh shorten
-./deploy_updated_lambda.sh redirect
+./deploy_updated_lambda.sh
 ```
-The helper script will build a new binary, compress it, and if you press ENTER, will perform a `terraform apply`.
+The helper script will build all new binaries, compress them, and if you press ENTER, will perform a `terraform apply`.
 
 ### Usage
 
