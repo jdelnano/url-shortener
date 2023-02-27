@@ -30,6 +30,9 @@ terraform apply
 3. That _should_ be it! If for some reason your API seems to not be active, you may need to go into
 API Gateway and perform a 'deploy' of you API:
 
+<img width="565" alt="api-gateway-screenshot" src="https://user-images.githubusercontent.com/18095335/221642267-f6bd32ab-1e0b-4385-b617-6a0cd694b3b0.png">
+
+
 ### Deploying lambda function updates
 If you find that you want to make updates to either `./lambdas/shorten/main.go` and/or `./lambdas/redirect/main.go`
 you'll need to then execute (ideally from the repository directory):
