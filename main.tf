@@ -1,5 +1,5 @@
 locals {
-  domain_name      = "<your_domain_name>" # e.g. example.com
+  domain_name      = "joedelnano.com" # e.g. example.com
   api_gateway_name = "UrlShortener"
 }
 
@@ -221,20 +221,26 @@ resource "aws_lambda_permission" "redirect" {
 
 # Lambdas
 resource "aws_lambda_function" "shorten" {
-  filename         = "lambdas/shorten/main.zip"
-  function_name    = "ShortenUrl"
-  role             = aws_iam_role.role.arn
-  handler          = "main"
-  runtime          = "go1.x"
+  filename      = "lambdas/shorten/main.zip"
+  function_name = "ShortenUrl"
+  role          = aws_iam_role.role.arn
+  # https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+  # when using the provided.al2 runtime, the executable name must be 'bootstrap'
+  handler = "bootstrap"
+  # https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+  runtime          = "provided.al2" # support for the go1.x runtime is ending
   source_code_hash = filebase64sha256("lambdas/shorten/main.zip")
 }
 
 resource "aws_lambda_function" "redirect" {
-  filename         = "lambdas/redirect/main.zip"
-  function_name    = "RedirectUrl"
-  role             = aws_iam_role.role.arn
-  handler          = "main"
-  runtime          = "go1.x"
+  filename      = "lambdas/redirect/main.zip"
+  function_name = "RedirectUrl"
+  role          = aws_iam_role.role.arn
+  # https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+  # when using the provided.al2 runtime, the executable name must be 'bootstrap'
+  handler = "bootstrap"
+  # https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+  runtime          = "provided.al2" # support for the go1.x runtime is ending
   source_code_hash = filebase64sha256("lambdas/redirect/main.zip")
 }
 

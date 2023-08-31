@@ -47,15 +47,15 @@ The helper script will build all new binaries, compress them, and if you press E
 To create a shortened url, execute the command below from any machine:
 ```
 curl -X POST \
-  'https://<your_domain>/' \
+  'https://joedelnano.com/shorten' \
   --header 'Content-Type: application/json' \
-  --data-raw '{"url": "https://example.com/shorten"}'
+  --data-raw '{"url": "https://example.com/long-url-that-you-wish-to-shorten"}'
 ```
 
 Example response:
 ```
-https://<your_domain>/af43i
+https://joedelnano.com/af43i
 ```
 
 #### Use the 'short' URL
-In a browser, copy and paste your shortened URL (e.g. `https://<your_domain>/af43i`) and see the magic work!
+In a browser, copy and paste your shortened URL (e.g. `https://joedelnano.com/af43i`) and see the magic work!

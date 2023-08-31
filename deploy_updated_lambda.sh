@@ -12,8 +12,10 @@ for i in ${array[@]}
 do
     # navigate to correct lambda-containing directory, build a new binary, and zip it
     pushd ${i}
-    GOOS=linux go build -o main main.go
-    zip -jrm main.zip main
+    # https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+    # when using the provided.al2 runtime, the executable name must be 'bootstrap'
+    GOARCH=amd64 GOOS=linux go build -o bootstrap main.go
+    zip -jrm main.zip bootstrap
     popd
 done
 

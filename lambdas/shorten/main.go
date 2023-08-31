@@ -18,7 +18,7 @@ import (
 const (
 	// BaseURL used for "shortening" -- should be the one used in API Gateway/terraform
 	// NOTE:  update the value of this constant to match the domain you're using in your AWS account
-	BaseURL = "https://<your_domain>"
+	BaseURL = "https://joedelnano.com"
 	//BaseURL = "https://<domain_name>"
 	// ShortURLTable value needs to match the name used in terraform for DynamoDB table creation
 	ShortURLTable = "UrlShortenerTable"
