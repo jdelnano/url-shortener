@@ -15,8 +15,8 @@ in `$HOME/.aws/credentials`--so that terraform will be able to successfully crea
 ### Installation
 1. Clone this repo and then `cd` inside the project root:
 ```bash
-git clone git@github.com:jdelnano/url-shortener.git
-cd url-shortener
+git clone git@github.com:jdelnano/serverless-golang-url-shortener.git
+cd serverless-golang-url-shortener
 ```
 2. From the project root directory, create all AWS resources/infrastructure via `terraform`:
 ```bash
