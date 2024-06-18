@@ -59,3 +59,8 @@ https://joedelnano.com/af43i
 
 #### Use the 'short' URL
 In a browser, copy and paste your shortened URL (e.g. `https://joedelnano.com/af43i`) and see the magic work!
+
+### Infrastructure model
+![Infrastructure main model](.infragenie/infrastructure_main_model.svg)
+
+---
