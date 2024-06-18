@@ -59,3 +59,6 @@ https://joedelnano.com/af43i
 
 #### Use the 'short' URL
 In a browser, copy and paste your shortened URL (e.g. `https://joedelnano.com/af43i`) and see the magic work!
+
+### Infrastructure model
+![jdelnano_serverless-golang-url-shortener](https://github.com/jdelnano/serverless-golang-url-shortener/assets/173192552/8f6647ed-37ed-4876-a4f4-797ee03aae18)
